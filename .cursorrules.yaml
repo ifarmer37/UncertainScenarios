@@ -1,0 +1,29 @@
+# Cursor AI Code Rules for UncertainScenarios Project
+
+language: TypeScript
+
+rules:
+  - Always use strict types (no `any`)
+  - Use functional components in React
+  - Follow Airbnb ESLint rules
+  - Prefer destructuring where possible
+  - Use async/await instead of .then()
+  - Write concise and readable functions
+  - Use JSDoc comments for functions
+
+project:
+  name: UncertainScenarios
+  framework: React + Vite
+  preferred-state-management: Zustand
+  database: Supabase
+  deployment: Vercel
+
+naming-conventions:
+  - Variables should be camelCase
+  - React components must be PascalCase
+  - Constants should be UPPER_CASE
+
+prohibited:
+  - Do not use `eval()`
+  - Avoid deep nesting in functions
+  - No direct DOM manipulation (use React state)
