@@ -1,31 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HelpCircle, SkipForward, Repeat, X } from 'lucide-react';
-
-const ELEVENLABS_API_KEY = "sk_867e8a22df36c9c4fbf959f41117eb92a1d1ba3f49edbadf";
-const ELEVENLABS_VOICE_ID = "JoYo65swyP8hH6fVMeTO"; // Your Genie Voice ID
-
-
-async function speakTextElevenLabs(text) {
-  const response = await fetch("https://api.elevenlabs.io/v1/text-to-speech/" + ELEVENLABS_VOICE_ID, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "xi-api-key": ELEVENLABS_API_KEY
-    },
-    body: JSON.stringify({ text })
-  });
-  
-  if (!response.ok) {
-    console.error("Failed to fetch ElevenLabs audio");
-    return;
-  }
-  
-  const audioBlob = await response.blob();
-  const audioUrl = URL.createObjectURL(audioBlob);
-  const audio = new Audio(audioUrl);
-  audio.play();
-}
+import { speakTextElevenLabs } from '../utils/tts'; // Importing the new TTS function
 
 interface GameConciergeProps {
   gamePhase: string;
@@ -124,3 +100,4 @@ export const GameConcierge: React.FC<GameConciergeProps> = ({
     </AnimatePresence>
   );
 };
+
