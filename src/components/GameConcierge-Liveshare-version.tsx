@@ -2,31 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HelpCircle, SkipForward, Repeat, X } from 'lucide-react';
 
-const ELEVENLABS_API_KEY = "sk_867e8a22df36c9c4fbf959f41117eb92a1d1ba3f49edbadf";
-const ELEVENLABS_VOICE_ID = "JoYo65swyP8hH6fVMeTO"; // Your Genie Voice ID
-
-
-async function speakTextElevenLabs(text) {
-  const response = await fetch("https://api.elevenlabs.io/v1/text-to-speech/" + ELEVENLABS_VOICE_ID, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "xi-api-key": ELEVENLABS_API_KEY
-    },
-    body: JSON.stringify({ text })
-  });
-  
-  if (!response.ok) {
-    console.error("Failed to fetch ElevenLabs audio");
-    return;
-  }
-  
-  const audioBlob = await response.blob();
-  const audioUrl = URL.createObjectURL(audioBlob);
-  const audio = new Audio(audioUrl);
-  audio.play();
-}
-
 interface GameConciergeProps {
   gamePhase: string;
   codeCracker: any;
@@ -59,7 +34,7 @@ export const GameConcierge: React.FC<GameConciergeProps> = ({
         ];
       case 'category':
         return [
-          `${codeCracker?.name} is our Code Cracker! Now let's choose a category.",
+          `${codeCracker?.name} is our Code Cracker! Now let's choose a category.`,
           "Each category offers different types of scenarios to explore.",
           "Choose wisely - this will shape the stories we'll create!"
         ];
@@ -90,6 +65,8 @@ export const GameConcierge: React.FC<GameConciergeProps> = ({
   useEffect(() => {
     if (!isPlaying) return;
 
+    window.speechSynthesis.cancel();
+
     const script = getPhaseScript();
     if (currentLine >= script.length) {
       setHasPlayedIntro(true);
@@ -97,12 +74,27 @@ export const GameConcierge: React.FC<GameConciergeProps> = ({
       return;
     }
 
-    speakTextElevenLabs(script[currentLine]).then(() => {
+    const utterance = new SpeechSynthesisUtterance(script[currentLine]);
+    utterance.rate = 0.9;
+    utterance.pitch = 1.1;
+    utterance.volume = 1.0;
+
+    utterance.onend = () => {
       setTimeout(() => {
         setCurrentLine(prev => prev + 1);
-      }, 1000);
-    });
+      }, 500);
+    };
 
+    utterance.onerror = (event) => {
+      console.error('Speech synthesis error:', event);
+      setCurrentLine(prev => prev + 1);
+    };
+
+    window.speechSynthesis.speak(utterance);
+
+    return () => {
+      window.speechSynthesis.cancel();
+    };
   }, [currentLine, isPlaying]);
 
   const handleGenieClick = () => {
@@ -114,13 +106,47 @@ export const GameConcierge: React.FC<GameConciergeProps> = ({
     <AnimatePresence>
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1, y: [0, -10, 0], rotate: [0, 3, 0] }}
-        transition={{ y: { duration: 4, repeat: Infinity, ease: "easeInOut" }, rotate: { duration: 6, repeat: Infinity, ease: "easeInOut" } }}
+        animate={{ 
+          opacity: 1, 
+          scale: 1,
+          y: [0, -10, 0],
+          rotate: [0, 3, 0]
+        }}
+        transition={{ 
+          y: {
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut"
+          },
+          rotate: {
+            duration: 6,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }
+        }}
         className="fixed top-24 right-8 z-50 cursor-pointer"
         onClick={handleGenieClick}
       >
-        <img src="/tokens/genie.png" alt="Game Genie" className="w-32 h-32 object-contain" />
+        <img
+          src="/tokens/genie.png"
+          alt="Game Genie"
+          className="w-32 h-32 object-contain"
+        />
       </motion.div>
+
+      {isGenieClicked && isPlaying && (
+        <motion.div
+          key="genie-dialogue"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="absolute -top-16 left-1/2 transform -translate-x-1/2 bg-purple-600 text-white px-4 py-2 rounded-lg whitespace-nowrap shadow-lg"
+        >
+          {getPhaseScript()[currentLine]}
+          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2">
+            <div className="w-4 h-4 bg-purple-600 rotate-45" />
+          </div>
+        </motion.div>
+      )}
     </AnimatePresence>
   );
 };
