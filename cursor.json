@@ -1,0 +1,5 @@
+{
+  "startupCommands": [
+    "npm run dev"
+  ]
+}
