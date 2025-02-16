@@ -5,11 +5,12 @@ import PlayingCard from "./components/PlayingCard";
 import { Sparkles } from "lucide-react";
 import type { Player } from "./types";
 import { useGameSession } from "./hooks/useGameSession";
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
-import { GameConcierge } from './components/GameConcierge';
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import { GameConcierge } from "./components/GameConcierge";
+import { CategorySelector } from "./components/CategorySelector";
 
-// Add Error Boundary Component
+// Error Boundary Component
 class ErrorBoundary extends React.Component<
   { children: React.ReactNode },
   { hasError: boolean }
@@ -19,7 +20,7 @@ class ErrorBoundary extends React.Component<
     this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError(error: any) {
+  static getDerivedStateFromError() {
     return { hasError: true };
   }
 
@@ -49,7 +50,7 @@ function App() {
   const [players, setPlayers] = useState<Player[]>([]);
   const [codeCracker, setCodeCracker] = useState<Player | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>();
-  const [gamePhase, setGamePhase] = useState('setup');
+  const [gamePhase, setGamePhase] = useState("setup");
   const [showIntro, setShowIntro] = useState(true);
   const [showConcierge, setShowConcierge] = useState(true);
 
@@ -66,11 +67,23 @@ function App() {
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <div className="flex items-center gap-2">
           <Sparkles className="w-6 h-6 text-purple-600" />
-          <h1 className="text-2xl font-bold text-purple-800">Uncertain Scenarios</h1>
+          <h1 className="text-2xl font-bold text-purple-800">
+            Uncertain Scenarios
+          </h1>
         </div>
         <div className="flex gap-4">
-          <a href="/" className="text-purple-600 hover:text-purple-700 font-bold">Home</a>
-          <a href="/how-to-play" className="text-purple-600 hover:text-purple-700 font-bold">How to Play</a>
+          <a
+            href="/"
+            className="text-purple-600 hover:text-purple-700 font-bold"
+          >
+            Home
+          </a>
+          <a
+            href="/how-to-play"
+            className="text-purple-600 hover:text-purple-700 font-bold"
+          >
+            How to Play
+          </a>
         </div>
       </div>
     </div>
@@ -117,38 +130,39 @@ function App() {
       );
     }
 
-    if (gameStarted && players.length > 0) {
-      return (
-        <div className="grid grid-cols-3 gap-4">
+    return (
+      <div className="relative">
+        {/* Category Selection Above Board in Solo Play */}
+        {gameMode === "solo" && (
+          <CategorySelector onSelectCategory={setSelectedCategory} />
+        )}
+
+        {/* Game Board */}
+        <div className="grid grid-cols-3 gap-4 mt-8">
           {players.map((player) => (
-            <PlayingCard 
-              key={player.id} 
-              player={player}
-              onSelect={() => {}}
-            />
+            <PlayingCard key={player.id} player={player} onSelect={() => {}} />
           ))}
         </div>
-      );
-    }
-
-    return <div className="text-center text-white">Game is running...</div>;
+      </div>
+    );
   };
 
   return (
-    <div className="min-h-screen bg-cover bg-center" style={{ backgroundImage: 'url(/board-background.jpg)' }}>
+    <div
+      className="min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: "url(/board-background.jpg)" }}
+    >
       <NavigationBar />
       <div className="container mx-auto px-4 py-16">
-        <ErrorBoundary>
-          {renderGameContent()}
-        </ErrorBoundary>
+        <ErrorBoundary>{renderGameContent()}</ErrorBoundary>
       </div>
       {showConcierge && (
-        <GameConcierge 
-          gamePhase={gamePhase} 
-          codeCracker={codeCracker} 
-          onHelpClick={handleHelpClick} 
-          showIntro={showIntro} 
-          onClose={handleCloseConcierge} 
+        <GameConcierge
+          gamePhase={gamePhase}
+          codeCracker={codeCracker}
+          onHelpClick={handleHelpClick}
+          showIntro={showIntro}
+          onClose={handleCloseConcierge}
         />
       )}
     </div>
