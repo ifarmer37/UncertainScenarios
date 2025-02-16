@@ -1,0 +1,220 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Game Board Background */
+.game-board {
+  background-image: url('/board-background.jpg');
+  background-size: cover;
+  background-position: center;
+  min-height: 600px;
+  position: relative;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.game-board::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(2px);
+}
+
+.game-board-content {
+  position: relative;
+  z-index: 2;
+}
+
+/* Text Shadow for better readability on background */
+.text-shadow {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.text-shadow-lg {
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+}
+
+/* Game States */
+.peak-state {
+  background: linear-gradient(to bottom right, #4ade80, #22c55e);
+}
+
+.abyss-state {
+  background: linear-gradient(to bottom right, #ef4444, #dc2626);
+}
+
+/* Card Animations */
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+.animate-wiggle {
+  animation: wiggle 0.3s ease-in-out;
+}
+
+/* 3D Card Transformations */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+/* Medieval Font */
+@font-face {
+  font-family: 'MedievalSharp';
+  src: url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
+}
+
+.font-medieval {
+  font-family: 'MedievalSharp', cursive;
+}
+
+/* Category Card Styles */
+.category-card {
+  transition: transform 0.3s ease-in-out;
+}
+
+.category-card:hover {
+  transform: translateY(-5px) scale(1.05);
+}
+
+/* Question Card Styling */
+.question-card {
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-size: 1.25rem;
+  padding: 1rem;
+  background-color: white;
+}
+
+/* Player card styles */
+.player-card {
+  transition: transform 0.3s ease-in-out;
+}
+
+.player-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Token image container */
+.token-container {
+  aspect-ratio: 1;
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.token-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+/* Add Carousel Styles */
+.slick-prev,
+.slick-next {
+  z-index: 1;
+}
+
+.slick-prev {
+  left: -25px;
+}
+
+.slick-next {
+  right: -25px;
+}
+
+.slick-prev:before,
+.slick-next:before {
+  color: #666;
+}
+
+.carousel-container {
+  margin: 0 30px;
+}
+
+.slick-dots li button:before {
+  color: #666;
+}
+
+.slick-dots li.slick-active button:before {
+  color: #333;
+}
+
+/* Game board styles */
+.game-board-overlay {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(4px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Playing card styles */
+.playing-card {
+  aspect-ratio: 2.5/3.5;
+  transform-style: preserve-3d;
+  transition: transform 0.3s ease;
+}
+
+.playing-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Token image container */
+.token-image-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.token-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* Category carousel styles */
+.category-carousel {
+  padding: 20px 0;
+}
+
+.category-carousel .slick-slide {
+  padding: 10px;
+  transition: transform 0.3s ease;
+}
+
+.category-carousel .slick-center {
+  transform: scale(1.05);
+}
+
+.category-carousel .slick-prev,
+.category-carousel .slick-next {
+  width: 40px;
+  height: 40px;
+  z-index: 10;
+}
+
+.category-carousel .slick-prev {
+  left: -45px;
+}
+
+.category-carousel .slick-next {
+  right: -45px;
+}
